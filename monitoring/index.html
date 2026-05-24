@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitoring Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+        
+        .metric-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #2c3e50;
+        }
+        
+        .metric-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2c3e50);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .info-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .info-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-item i {
+            color: #3498db;
+            width: 20px;
+        }
+        
+        .info-item span {
+            font-weight: 500;
+        }
+        
+        .logs-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logs-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .logs-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        
+        .log-entry {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #3498db;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+        
+        .log-entry .timestamp {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+        }
+        
+        .log-entry .message {
+            margin-top: 5px;
+            color: #2c3e50;
+        }
+        
+        .status-bar {
+            text-align: center;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>System Monitoring Dashboard</h1>
+            <p class="subtitle">Real-time system metrics and logs</p>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card" id="cpu-card">
+                <h3>🖥️ CPU Usage</h3>
+                <div class="metric-value" id="cpu-value">0%</div>
+                <div class="metric-label">Processor Utilization</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="cpu-progress"></div>
+                </div>
+            </div>
+            
+            <div class="metric-card" id="memory-card">
+                <h3>💾 Memory Usage</h3>
+                <div class="metric-value" id="memory-value">0%</div>
+                <div class="metric-label">RAM Utilization</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="memory-progress"></div>
+                </div>
+            </div>
+            
+            <div class="metric-card" id="disk-card">
+                <h3>💽 Disk Usage</h3>
+                <div class="metric-value" id="disk-value">0%</div>
+                <div class="metric-label">Storage Utilization</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="disk-progress"></div>
+                </div>
+            </div>
+            
+            <div class="metric-card" id="uptime-card">
+                <h3>⏱️ System Uptime</h3>
+                <div class="metric-value" id="uptime-value">0s</div>
+                <div class="metric-label">Time Since Last Boot</div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>System Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <i>🖥️</i>
+                    <span>
+                        <strong>Hostname:</strong> <span id="hostname">-</span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <i>🐧</i>
+                    <span>
+                        <strong>Kernel:</strong> <span id="kernel">-</span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <i>⚡</i>
+                    <span>
+                        <strong>Load Average:</strong> <span id="load-avg">-</span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <i>⚙️</i>
+                    <span>
+                        <strong>Processes:</strong> <span id="process-count">-</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="logs-section">
+            <h2>Recent System Logs</h2>
+            <div class="logs-container" id="logs-container">
+                <div class="log-entry">
+                    <div class="message">Loading logs...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            Last updated: <span id="last-update">-</span> | 
+            Auto-refresh every 3 seconds | 
+            Serving on port 5050
+        </div>
+    </div>
+
+    <script>
+        // API endpoints
+        const METRICS_ENDPOINT = '/api/metrics';
+        const LOGS_ENDPOINT = '/api/logs';
+        const REFRESH_INTERVAL = 3000; // 3 seconds
+
+        // DOM elements
+        const cpuValue = document.getElementById('cpu-value');
+        const cpuProgress = document.getElementById('cpu-progress');
+        const memoryValue = document.getElementById('memory-value');
+        const memoryProgress = document.getElementById('memory-progress');
+        const diskValue = document.getElementById('disk-value');
+        const diskProgress = document.getElementById('disk-progress');
+        const uptimeValue = document.getElementById('uptime-value');
+        const hostnameValue = document.getElementById('hostname');
+        const kernelValue = document.getElementById('kernel');
+        const loadAvgValue = document.getElementById('load-avg');
+        const processCountValue = document.getElementById('process-count');
+        const logsContainer = document.getElementById('logs-container');
+        const lastUpdateValue = document.getElementById('last-update');
+
+        // Fetch metrics and update UI
+        async function fetchMetrics() {
+            try {
+                const response = await fetch(METRICS_ENDPOINT);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                updateMetricsDisplay(data);
+                updateLastUpdated();
+            } catch (error) {
+                console.error('Error fetching metrics:', error);
+                showError('metrics', error.message);
+            }
+        }
+
+        // Fetch logs and update UI
+        async function fetchLogs() {
+            try {
+                const response = await fetch(LOGS_ENDPOINT);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                updateLogsDisplay(data);
+            } catch (error) {
+                console.error('Error fetching logs:', error);
+                showError('logs', error.message);
+            }
+        }
+
+        // Update metrics display
+        function updateMetricsDisplay(data) {
+            // CPU
+            const cpuUsage = data.cpu_usage || 0;
+            cpuValue.textContent = `${cpuUsage}%`;
+            cpuProgress.style.width = `${Math.min(cpuUsage, 100)}%`;
+            cpuProgress.style.backgroundColor = getProgressColor(cpuUsage);
+
+            // Memory
+            const memory = data.memory || {};
+            const memoryPercent = memory.percent || 0;
+            memoryValue.textContent = `${memoryPercent}%`;
+            memoryProgress.style.width = `${Math.min(memoryPercent, 100)}%`;
+            memoryProgress.style.backgroundColor = getProgressColor(memoryPercent);
+            
+            // Also show memory usage text
+            if (memory.used && memory.total) {
+                memoryValue.innerHTML = `${memoryPercent}%<br><small>${memory.used} / ${memory.total}</small>`;
+            }
+
+            // Disk
+            const disk = data.disk || {};
+            const diskPercent = disk.percent || 0;
+            diskValue.textContent = `${diskPercent}%`;
+            diskProgress.style.width = `${Math.min(diskPercent, 100)}%`;
+            diskProgress.style.backgroundColor = getProgressColor(diskPercent);
+            
+            // Also show disk usage text
+            if (disk.used && disk.total) {
+                diskValue.innerHTML = `${diskPercent}%<br><small>${disk.used} / ${disk.total}</small>`;
+            }
+
+            // Uptime
+            uptimeValue.textContent = data.uptime || 'unknown';
+
+            // System info
+            hostnameValue.textContent = data.hostname || 'unknown';
+            kernelValue.textContent = data.kernel || 'unknown';
+            
+            const loadAvg = data.load_avg || [0, 0, 0];
+            loadAvgValue.textContent = loadAvg.map(v => v.toFixed(2)).join(', ');
+            
+            processCountValue.textContent = data.process_count || 0;
+        }
+
+        // Update logs display
+        function updateLogsDisplay(logs) {
+            if (!logs || logs.length === 0) {
+                logsContainer.innerHTML = '<div class="log-entry"><div class="message">No logs available</div></div>';
+                return;
+            }
+
+            logsContainer.innerHTML = logs.map(log => {
+                const time = log.timestamp ? `<div class="timestamp">${log.timestamp}</div>` : '';
+                const message = log.line || 'Unknown log entry';
+                return `
+                    <div class="log-entry">
+                        ${time}
+                        <div class="message">${message}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Auto-scroll to bottom
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
+
+        // Update last updated timestamp
+        function updateLastUpdated() {
+            const now = new Date();
+            lastUpdateValue.textContent = now.toLocaleTimeString();
+        }
+
+        // Show error in UI
+        function showError(type, message) {
+            if (type === 'metrics') {
+                cpuValue.textContent = 'Error';
+                memoryValue.textContent = 'Error';
+                diskValue.textContent = 'Error';
+            } else if (type === 'logs') {
+                logsContainer.innerHTML = `<div class="log-entry"><div class="message">Error loading logs: ${message}</div></div>`;
+            }
+        }
+
+        // Get color based on percentage (green->yellow->red)
+        function getProgressColor(percent) {
+            if (percent < 50) return '#27ae60'; // Green
+            if (percent < 80) return '#f39c12'; // Yellow
+            return '#e74c3c'; // Red
+        }
+
+        // Initialize dashboard
+        function initDashboard() {
+            fetchMetrics();
+            fetchLogs();
+            setInterval(fetchMetrics, REFRESH_INTERVAL);
+            setInterval(fetchLogs, REFRESH_INTERVAL * 2); // Logs less frequent
+        }
+
+        // Start when page loads
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

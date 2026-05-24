@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  monitoring-dashboard:
+    build: ./monitoring
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./logs:/app/logs:ro
+      - ./apps:/app/apps:ro
+    environment:
+      - TZ=UTC
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5050/api/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - devops-network
+
+networks:
+  devops-network:
+    driver: bridge

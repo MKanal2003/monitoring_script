@@ -1,0 +1,46 @@
+Starting System Monitoring Dashboard...
+Launching Python HTTP server on port 5050...
+Dashboard will be available at: http://localhost:5050
+API endpoints:
+  - http://localhost:5050/api/metrics
+  - http://localhost:5050/api/logs
+
+Press Ctrl+C to stop the server
+----------------------------------------
+Traceback (most recent call last):
+  File "/home/mkanal2003/devops-project/monitoring/server.py", line 275, in <module>
+    with socketserver.TCPServer(("", PORT), MonitoringHandler) as httpd:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Starting System Monitoring Dashboard...
+Launching Python HTTP server on port 5050...
+Dashboard will be available at: http://localhost:5050
+API endpoints:
+  - http://localhost:5050/api/metrics
+  - http://localhost:5050/api/logs
+
+Press Ctrl+C to stop the server
+----------------------------------------
+Traceback (most recent call last):
+  File "/home/mkanal2003/devops-project/monitoring/server.py", line 275, in <module>
+    with socketserver.TCPServer(("", PORT), MonitoringHandler) as httpd:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Starting System Monitoring Dashboard...
+Launching Python HTTP server on port 5050...
+Dashboard will be available at: http://localhost:5050
+API endpoints:
+  - http://localhost:5050/api/metrics
+  - http://localhost:5050/api/logs
+
+Press Ctrl+C to stop the server
+----------------------------------------
+./up.sh: line 44:  4484 Killed                  python3 server.py
