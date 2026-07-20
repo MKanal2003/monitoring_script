@@ -1,3 +1,12 @@
-logs/ 
+logs/
 backups/
-
+__pycache__/
+*.pyc
+*.pyo
+*.swp
+*.swo
+*.swm
+nohup.out
+out.log
+*.log
+.DS_Store
